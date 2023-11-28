@@ -10,3 +10,9 @@ compile_commands.json
 /KoboRoot.tgz
 /libnickelnote.so
 /src/nickelnote.o
+
+
+ghidra
+kobo-update-4
+qt_example
+test.html
