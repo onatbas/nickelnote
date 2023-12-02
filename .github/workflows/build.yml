@@ -1,0 +1,39 @@
+name: Build
+on: [push, pull_request]
+
+jobs:
+  build_ndb:
+    name: Build NickelNote
+    runs-on: ubuntu-latest
+    container: ghcr.io/pgaskin/nickeltc:1.0
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+
+    - name: Inject version string
+      run: |
+        set -x
+        git fetch -f --prune --unshallow --tags
+        echo "VERSION=$(git describe --abbrev=5)" >> $GITHUB_ENV
+
+    - name: Build
+      run: make clean && make all koboroot
+
+    - name: Upload KoboRoot
+      uses: actions/upload-artifact@v3
+      with:
+        name: NickelNote-${{ env.VERSION }}
+        path: KoboRoot.tgz
+
+    - name: Zip KoboRoot
+      run: zip NickelNote-${{ env.VERSION }}.zip KoboRoot.tgz
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: NickelNote-${{ env.VERSION }}.zip
+        draft: true
+        fail_on_unmatched_files: true

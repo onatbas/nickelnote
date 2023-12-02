@@ -1,0 +1,18 @@
+#infoWidget {
+  color: black;
+  background-color: rgba(255,255,255,170);
+  min-height: 290px;
+  max-height: 290px;
+
+  margin-top: 200px;
+  margin-left: -30px;
+}
+
+#infoWidget[powerOffView=true]{
+  background-color: rgba(0,0,0,170);
+}
+
+QLabel{
+	min-width: 400px;
+	min-height: 300px;
+}

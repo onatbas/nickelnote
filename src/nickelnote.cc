@@ -1,30 +1,38 @@
 #include "nickelnote.h"
-//#include "note.h"
-
-//Typedefs
-typedef QObject OverDriveActionProxy;
-void (*OverDriveActionProxy_setShowOverdrive)(OverDriveActionProxy *_this, bool setShow);
+#include "StyledTextBrowser.h"
 
 
+#include <QApplication>
+#include <QWidget>
+#include <QLayout>
+#include <QDomDocument>
+#include <QDomElement>
 
-//Debug Info
-void appendToFile(const QString &filePath, const QString &textToAppend)
-{
-    QFile file(filePath);
-    if (file.open(QIODevice::Append | QIODevice::Text))
-    {
-        QTextStream(&file) << textToAppend << "\n";
-        file.close();
+
+#include <QWidget>
+#include <QPixmap>
+#include <QScreen>
+#include <QFile>
+
+
+//typedef
+typedef QWidget FullScreenDragonPowerView;
+
+FullScreenDragonPowerView *(*setupUi)(FullScreenDragonPowerView *);
+
+extern "C" __attribute__((visibility("default"))) FullScreenDragonPowerView* _fullScreenDragonPowerView_constructor(FullScreenDragonPowerView *_this){
+
+	auto view = setupUi(_this);
+    QWidget* widget = qobject_cast<QWidget*>(view);
+
+    if (widget) {
+		QBoxLayout* layout = dynamic_cast<QBoxLayout*>(widget->layout());
+		if (layout){
+			layout->insertWidget(0, new StyledTextBrowser());
+		}
     }
-
+	return view;
 }
-
-
-extern "C" __attribute__((visibility("default"))) void _always_show_overdrive(OverDriveActionProxy *_this, bool setShow) {
-	appendToFile(NICKEL_NOTE_DIR "logs.txt", "InterceptED!... _always_show_overdrive");
-	OverDriveActionProxy_setShowOverdrive(_this, setShow);
-}
-
 
 struct nh_info NickelNote = {
     .name           = "NickelNote",
@@ -33,37 +41,30 @@ struct nh_info NickelNote = {
 };
 
 struct nh_hook NickelNoteHook[] = {
+
 	{
-		.sym	= "_ZN20OverDriveActionProxy16setShowOverDriveEb",
-		.sym_new = "_always_show_overdrive",
-        .lib     = "libnickel.so.1.0.0",
-		.out	= nh_symoutptr(OverDriveActionProxy_setShowOverdrive),
-		.desc    = "Always show overdrive"
-	}, 
+		.sym = "_ZN25FullScreenDragonPowerViewC1Ev",
+		.sym_new = "_fullScreenDragonPowerView_constructor",
+		.lib	= "libnickel.so.1.0.0",
+		.out = nh_symoutptr(setupUi),
+		.desc= "Play with the Dragon!"
+	} ,
     {0}
 };
 
 
 struct nh_dlsym NickelNoteDlsym[] = {
-/*{
-		.name = "_ZN20OverDriveActionProxy16setShowOverDriveEb",
-		.out	= nh_symoutptr(OverDriveActionProxy_setShowOverdrive),
-		.desc = "OverDriveActionProxy_setShowOverdrive"
-	},*/	
 	{0},
 };
-
-
 
 bool nn_uninstall()
 {
     nh_delete_file(NICKEL_NOTE_TEMPLATE_FILE);
-   // nh_delete_dir(NICKEL_NOTE_DIR);
+    nh_delete_dir(NICKEL_NOTE_DIR);
     return true;
 }
 int nn_init()
 {
-  appendToFile(NICKEL_NOTE_DIR "logs.txt", "Init complete..5.. All functionality is commented out..");
 	return 0;
 }
 

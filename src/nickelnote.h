@@ -25,7 +25,10 @@
 #endif
 
 #ifndef NICKEL_NOTE_TEMPLATE_FILE
-    #define NICKEL_NOTE_TEMPLATE_FILE "/mnt/onboard/.adds/nickelnote/template.html"
+    #define NICKEL_NOTE_TEMPLATE_FILE "/mnt/onboard/.adds/nickelnote/content.template"
+#endif
+#ifndef NICKEL_NOTE_STYLE_FILE
+    #define NICKEL_NOTE_STYLE_FILE "/mnt/onboard/.adds/nickelnote/style.template"
 #endif
 
 #ifndef NICKEL_NOTE_DELETE_FILE
