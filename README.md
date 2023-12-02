@@ -4,7 +4,7 @@ This mod allows you to to add a custom note to the sleep
 view of your kobo. 
 
 ## Pictures
-![](./screenshot.jpg)
+![](./screenshots/powerOn.jpg)
 
 ## Installation
 
