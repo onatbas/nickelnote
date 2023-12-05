@@ -10,9 +10,9 @@
 //;
 
 
-class StyledTextBrowser : public QTextBrowser {
+class StyledTextBrowser : public QFrame {
 public:
-    StyledTextBrowser() : QTextBrowser(nullptr)
+    StyledTextBrowser() : QFrame(nullptr)
     {
         setupUI();
     }
@@ -37,27 +37,22 @@ private:
 			QWidget *infoWidget = this;
 			auto *outerLayout = new QVBoxLayout(infoWidget);
 			infoWidget->setObjectName("infoWidget");
+			infoWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+			infoWidget->setStyleSheet(styleText);
+			infoWidget->setContentsMargins(0, 0, 0, 0);
 
-			QWidget *infoFrame = new QWidget(infoWidget);
+			QWidget *infoFrame = new QFrame(infoWidget);
 			auto *innerLayout = new QHBoxLayout(infoFrame);
 			infoFrame->setObjectName("infoFrame");
-
+			infoFrame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 			outerLayout->addWidget(infoFrame, 0, Qt::AlignLeft);
+			infoFrame->setStyleSheet(styleText);
+			infoFrame->setContentsMargins(0, 0, 0, 0);
 
 
 			QLabel* label = new QLabel(infoFrame);
 			label->setText(richText);
 			label->setAlignment(Qt::AlignLeft);
-
-			infoWidget->setStyleSheet(styleText);
-			infoFrame->setStyleSheet(styleText);
-
-			infoWidget->setContentsMargins(0, 0, 0, 0);
-			infoFrame->setContentsMargins(0, 0, 0, 0);
-			outerLayout->setSpacing(0);
-			innerLayout->setSpacing(0);
-
-
     		innerLayout->addWidget(label, 0, Qt::AlignLeft);
 
 		}

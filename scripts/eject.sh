@@ -1,0 +1,1 @@
+diskutil eject /Volumes/KOBOeReader/
