@@ -26,36 +26,46 @@ extern "C" __attribute__((visibility("default"))) FullScreenDragonPowerView* _fu
 
 	auto view = powerViewConstructor(_this);
 
-    if (view) {
-		QBoxLayout* layout = dynamic_cast<QBoxLayout*>(view->layout());
-		if (layout){
+	if (view)
+	{
+		QBoxLayout *layout = dynamic_cast<QBoxLayout *>(view->layout());
+		if (layout)
+		{
 			layout->insertWidget(0, new StyledTextBrowser());
 		}
-    }
+	}
 	return view;
 }
 
 extern "C" __attribute__((visibility("default"))) PinInputDialog* _pinCodeInputDialog_constructor(PinInputDialog *_this){
 
 	auto view = pinInputConstructor(_this);
+	QFile file(NICKEL_NOTE_PIN_TEMPLATE_FILE);
+	if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+	{
+		QTextStream in(&file);
+		QString richText = in.readAll();
+		file.close();
 
-    if (view) {
-		QWidget* forgotPin = view->findChild<QWidget*>("lblForgotPin");
-		if (forgotPin){
-			QWidget* parentOfFoundWidget = forgotPin->parentWidget();
-        	if (parentOfFoundWidget) {
-            	QLayout* parentLayout = parentOfFoundWidget->layout();
-	        	parentLayout->replaceWidget(forgotPin, new StyledTextBrowser());
+		if (view)
+		{
+			QWidget *forgotPin = view->findChild<QWidget *>("lblForgotPin");
+			if (forgotPin)
+			{
+				QLabel *label = new QLabel(richText);
+				label->setAlignment(Qt::AlignCenter);
+				forgotPin->parentWidget()->layout()->replaceWidget(forgotPin, label);
 				delete forgotPin;
 			}
 		}
 
-		QWidget* signout = view->findChild<QWidget*>("lblSignout");
-		if (signout){
+		QWidget *signout = view->findChild<QWidget *>("lblSignOut");
+		if (signout)
+		{
 			signout->setParent(nullptr);
 			delete signout;
 		}
-    }
+	}
 	return view;
 }
 

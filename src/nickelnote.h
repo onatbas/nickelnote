@@ -27,6 +27,11 @@
 #ifndef NICKEL_NOTE_TEMPLATE_FILE
     #define NICKEL_NOTE_TEMPLATE_FILE "/mnt/onboard/.adds/nickelnote/content.template"
 #endif
+
+#ifndef NICKEL_NOTE_PIN_TEMPLATE_FILE
+    #define NICKEL_NOTE_PIN_TEMPLATE_FILE "/mnt/onboard/.adds/nickelnote/pin.template"
+#endif
+
 #ifndef NICKEL_NOTE_STYLE_FILE
     #define NICKEL_NOTE_STYLE_FILE "/mnt/onboard/.adds/nickelnote/style.template"
 #endif
