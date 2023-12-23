@@ -41,17 +41,14 @@ extern "C" __attribute__((visibility("default"))) PinInputDialog* _pinCodeInputD
 
 	auto view = pinInputConstructor(_this);
 	QFile file(NICKEL_NOTE_PIN_TEMPLATE_FILE);
-	if (file.open(QIODevice::ReadOnly | QIODevice::Text))
-	{
+	if (file.open(QIODevice::ReadOnly | QIODevice::Text)){
 		QTextStream in(&file);
 		QString richText = in.readAll();
 		file.close();
 
-		if (view)
-		{
+		if (view){
 			QWidget *forgotPin = view->findChild<QWidget *>("lblForgotPin");
-			if (forgotPin)
-			{
+			if (forgotPin){
 				QLabel *label = new QLabel(richText);
 				label->setAlignment(Qt::AlignCenter);
 				forgotPin->parentWidget()->layout()->replaceWidget(forgotPin, label);
@@ -60,8 +57,7 @@ extern "C" __attribute__((visibility("default"))) PinInputDialog* _pinCodeInputD
 		}
 
 		QWidget *signout = view->findChild<QWidget *>("lblSignOut");
-		if (signout)
-		{
+		if (signout){
 			signout->setParent(nullptr);
 			delete signout;
 		}
