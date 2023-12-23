@@ -17,22 +17,48 @@
 
 //typedef
 typedef QWidget FullScreenDragonPowerView;
+typedef QWidget PinInputDialog;
 
-FullScreenDragonPowerView *(*setupUi)(FullScreenDragonPowerView *);
+FullScreenDragonPowerView *(*powerViewConstructor)(FullScreenDragonPowerView *);
+PinInputDialog *(*pinInputConstructor)(PinInputDialog *);
 
 extern "C" __attribute__((visibility("default"))) FullScreenDragonPowerView* _fullScreenDragonPowerView_constructor(FullScreenDragonPowerView *_this){
 
-	auto view = setupUi(_this);
-    QWidget* widget = qobject_cast<QWidget*>(view);
+	auto view = powerViewConstructor(_this);
 
-    if (widget) {
-		QBoxLayout* layout = dynamic_cast<QBoxLayout*>(widget->layout());
+    if (view) {
+		QBoxLayout* layout = dynamic_cast<QBoxLayout*>(view->layout());
 		if (layout){
 			layout->insertWidget(0, new StyledTextBrowser());
 		}
     }
 	return view;
 }
+
+extern "C" __attribute__((visibility("default"))) PinInputDialog* _pinCodeInputDialog_constructor(PinInputDialog *_this){
+
+	auto view = pinInputConstructor(_this);
+
+    if (view) {
+		QWidget* forgotPin = view->findChild<QWidget*>("lblForgotPin");
+		if (forgotPin){
+			QWidget* parentOfFoundWidget = forgotPin->parentWidget();
+        	if (parentOfFoundWidget) {
+            	QLayout* parentLayout = parentOfFoundWidget->layout();
+	        	parentLayout->replaceWidget(forgotPin, new StyledTextBrowser());
+				delete forgotPin;
+			}
+		}
+
+		QWidget* signout = view->findChild<QWidget*>("lblSignout");
+		if (signout){
+			signout->setParent(nullptr);
+			delete signout;
+		}
+    }
+	return view;
+}
+
 
 struct nh_info NickelNote = {
     .name           = "NickelNote",
@@ -46,9 +72,16 @@ struct nh_hook NickelNoteHook[] = {
 		.sym = "_ZN25FullScreenDragonPowerViewC1Ev",
 		.sym_new = "_fullScreenDragonPowerView_constructor",
 		.lib	= "libnickel.so.1.0.0",
-		.out = nh_symoutptr(setupUi),
-		.desc= "Play with the Dragon!"
-	} ,
+		.out = nh_symoutptr(powerViewConstructor),
+		.desc= "Change power down sleep view."
+	},
+	{
+		.sym = "_ZN18PinCodeInputDialogC1EP7QWidget",
+		.sym_new = "_pinCodeInputDialog_constructor",
+		.lib	= "libnickel.so.1.0.0",
+		.out = nh_symoutptr(pinInputConstructor),
+		.desc= "Change input pin dialog."
+	},
     {0}
 };
 
